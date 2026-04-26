@@ -18,7 +18,7 @@ Instituto de Computação, Unicamp · 2026
 
 ## 📌 Sobre o Projeto
 
-O projeto modela a relação entre atores e filmes como um **grafo bipartido ponderado**, onde:
+O projeto modela a relação entre atores e filmes como um **grafo bipartido**, onde:
 
 - **Vértices** representam atores e filmes
 - **Arestas** conectam um ator a um filme em que ele participou
