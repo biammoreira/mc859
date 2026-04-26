@@ -16,26 +16,46 @@ def carregar_dados():
     filmes_df = pd.read_csv(f"{DADOS_PATH}/MOVIES_FINAL.csv")
     atores_df = pd.read_csv(f"{DADOS_PATH}/ACTORS_FINAL.csv")
     movie_actors_df = pd.read_csv(f"{DADOS_PATH}/MOVIE_ACTORS_FINAL.csv")
+    generos_df = pd.read_csv(f"{DADOS_PATH}/GENRES_FINAL.csv")
+    movie_generos_df = pd.read_csv(f"{DADOS_PATH}/MOVIE_GENRES_FINAL.csv")
     
     print(f"Filmes carregados: {len(filmes_df)}")
     print(f"Atores carregados: {len(atores_df)}")
     print(f"Arestas carregadas: {len(movie_actors_df)}")
     
-    return filmes_df, atores_df, movie_actors_df
+    return filmes_df, atores_df, movie_actors_df, generos_df, movie_generos_df
 
 
-def criar_grafo_bipartido(filmes_df, atores_df, movie_actors_df):
+def criar_grafo_bipartido(filmes_df, atores_df, movie_actors_df, generos_df, movie_generos_df):
     G = nx.Graph()
+    
+    #criar mapa de genre_id -> genre_name
+    genre_map = dict(zip(generos_df['genre_id'], generos_df['genre_name']))
+    
+    #criar mapa de movie_id -> lista de gêneros
+    movie_generos_map = {}
+    for _, row in movie_generos_df.iterrows():
+        movie_id = row['movie_id']
+        genre_id = row['genre_id']
+        genre_name = genre_map.get(genre_id, "Unknown")
+        
+        if movie_id not in movie_generos_map:
+            movie_generos_map[movie_id] = []
+        movie_generos_map[movie_id].append(genre_name)
     
     #adicionar nós de filmes
     for _, filme in filmes_df.iterrows():
+        movie_id = filme['movie_id']
+        generos = movie_generos_map.get(movie_id, [])
+        
         G.add_node(
-            f"filme_{filme['movie_id']}",
+            f"filme_{movie_id}",
             label=filme["title"],
             tipo="filme",
             titulo=filme["title"],
             nota=filme["vote_average"],
-            ano=str(filme["release_date"])[:4]
+            ano=str(filme["release_date"])[:4],
+            generos="|".join(generos)  #armazenar como string separada por |
         )
     
     #adicionar nós de atores
@@ -153,10 +173,10 @@ def visualizar_distribuicao_componentes(analise):
 
 def executar_pipeline():
     #carregando dados
-    filmes_df, atores_df, movie_actors_df = carregar_dados()
+    filmes_df, atores_df, movie_actors_df, generos_df, movie_generos_df = carregar_dados()
     
     #criando grafo bipartido
-    G = criar_grafo_bipartido(filmes_df, atores_df, movie_actors_df)
+    G = criar_grafo_bipartido(filmes_df, atores_df, movie_actors_df, generos_df, movie_generos_df)
     
     #analisando grafo
     analise, componentes = analisar_grafo(G)
