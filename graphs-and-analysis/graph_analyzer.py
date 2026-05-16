@@ -69,7 +69,7 @@ def criar_grafo_bipartido(filmes_df, atores_df, movie_actors_df, generos_df, mov
             data_nascimento=ator["birthday"],
             genero = dict_generos_atores[ator["gender"]],
             local_nascimento = ator["place_of_birth"],
-            morto = "Sim" if ator["dead"] == "True" else "Não"
+            morto = "Sim" if ator["dead"] == True else "Não"
         )
     
     #adicionar arestas usando a tabela de relacionamento
