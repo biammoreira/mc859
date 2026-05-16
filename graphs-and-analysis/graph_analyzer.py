@@ -58,13 +58,17 @@ def criar_grafo_bipartido(filmes_df, atores_df, movie_actors_df, generos_df, mov
             generos="|".join(generos)  #armazenar como string separada por |
         )
     
+    dict_generos_atores = {"female":"feminino", "male":"masculino", "non_binary":"nao_binario", "not_specified":"nao_especificado"}
     #adicionar nós de atores
     for _, ator in atores_df.iterrows():
         G.add_node(
             f"ator_{ator['id']}",
             label=ator["name"],
             tipo="ator",
-            nome=ator["name"]
+            nome=ator["name"],
+            data_nascimento=ator["birthday"],
+            genero = dict_generos_atores[ator["gender"]],
+            local_nascimento = ator["place_of_birth"]
         )
     
     #adicionar arestas usando a tabela de relacionamento
