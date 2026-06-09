@@ -2,6 +2,11 @@
   "num_vertices": 28349,
   "num_arestas": 48241,
   "grau_medio": 3.4,
+  "grau_mediano": 2,
+  "grau_medio_atores": 2.58,
+  "grau_mediano_atores": 1.0,
+  "grau_medio_filmes": 4.99,
+  "grau_mediano_filmes": 5,
   "num_componentes": 388,
   "distribuicao_graus": {
     "0": 4,

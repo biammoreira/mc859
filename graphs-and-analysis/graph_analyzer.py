@@ -1,6 +1,7 @@
 import pandas as pd
 import networkx as nx
 from collections import Counter
+from statistics import median
 import json
 import os
 import matplotlib.pyplot as plt
@@ -105,11 +106,11 @@ def analisar_grafo(G):
     num_vertices = G.number_of_nodes()
     num_arestas = G.number_of_edges()
 
-    # calcular grau médio geral
+    # graus
     graus = [G.degree(node) for node in G.nodes()]
     grau_medio = sum(graus) / len(graus) if graus else 0
+    grau_mediano = median(graus) if graus else 0
 
-    # calcular grau médio por tipo de nó
     graus_atores = [
         G.degree(node)
         for node, attrs in G.nodes(data=True)
@@ -122,7 +123,10 @@ def analisar_grafo(G):
     ]
 
     grau_medio_atores = sum(graus_atores) / len(graus_atores) if graus_atores else 0
+    grau_mediano_atores = median(graus_atores) if graus_atores else 0
+
     grau_medio_filmes = sum(graus_filmes) / len(graus_filmes) if graus_filmes else 0
+    grau_mediano_filmes = median(graus_filmes) if graus_filmes else 0
 
     # componentes conexas
     componentes = list(nx.connected_components(G))
@@ -138,8 +142,11 @@ def analisar_grafo(G):
         "num_vertices": num_vertices,
         "num_arestas": num_arestas,
         "grau_medio": round(grau_medio, 2),
+        "grau_mediano": round(grau_mediano, 2),
         "grau_medio_atores": round(grau_medio_atores, 2),
+        "grau_mediano_atores": round(grau_mediano_atores, 2),
         "grau_medio_filmes": round(grau_medio_filmes, 2),
+        "grau_mediano_filmes": round(grau_mediano_filmes, 2),
         "num_componentes": num_componentes,
         "distribuicao_graus": dict(sorted(dist_graus.items())),
         "distribuicao_componentes": dict(sorted(tamanhos_componentes.items())),
@@ -160,8 +167,11 @@ def exibir_analise(analise):
     print(f"Vértices: {analise['num_vertices']}")
     print(f"Arestas: {analise['num_arestas']}")
     print(f"Grau médio geral: {analise['grau_medio']}")
+    print(f"Grau mediano geral: {analise['grau_mediano']}")
     print(f"Grau médio dos nós ator: {analise['grau_medio_atores']}")
+    print(f"Grau mediano dos nós ator: {analise['grau_mediano_atores']}")
     print(f"Grau médio dos nós filme: {analise['grau_medio_filmes']}")
+    print(f"Grau mediano dos nós filme: {analise['grau_mediano_filmes']}")
     print(f"Componentes conexas: {analise['num_componentes']}")
     print(f"Maior componente: {analise['maior_componente']} nós")
     print()
